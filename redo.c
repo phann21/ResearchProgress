@@ -4,14 +4,26 @@
 
 #define DIMENSION 3
 
-double matrix_determinant(double input_matrix[][DIMENSION]){
-    return (double)1;
+double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
+    double first_line = input_matrix[0][0] * (input_matrix[1][1] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][1]); 
+    double second_line = input_matrix[0][1] * (input_matrix[1][0] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][0]);
+    double third_line = input_matrix[0][3] * (input_matrix[1][0] * input_matrix[2][1] - input_matrix[1][1] * input_matrix[2][0]);
+
+    return first_line - second_line + third_line;
 }
 
 double* matrix_invert(double input_matrix[][DIMENSION]){
-    //TO DO INCOMPLETE
-    double* x;
-    return x;
+    double output_matrix[DIMENSION][DIMENSION] = {  {input_matrix[1][1] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][1], (-1) * (input_matrix[1][0] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][0]), input_matrix[1][0] * input_matrix[2][1] - input_matrix[1][1] * input_matrix[2][0]},
+                                                    {(-1) * (input_matrix[0][1] * input_matrix[2][2] - input_matrix[0][2] * input_matrix[2][1]), (input_matrix[0][0] * input_matrix[2][2] - input_matrix[0][2] * input_matrix[2][0]), (-1) * (input_matrix[0][0] * input_matrix[2][1] - input_matrix[0][1] * input_matrix[2][0])},
+                                                    {input_matrix[0][1] * input_matrix[1][2] - input_matrix[0][2] * input_matrix[1][1], (-1) * (input_matrix[0][0] * input_matrix[1][2] - input_matrix[0][2] * input_matrix[1][0]), input_matrix[0][0] * input_matrix[1][1] - input_matrix[0][1] * input_matrix[1][0]}};
+    
+    double determinant = matrix_determinant_3x3(input_matrix);
+    for (int i = 0; i < DIMENSION; i++){
+        for (int j = 0; j < DIMENSION; j++){
+            output_matrix[i][j] = output_matrix[i][j] / determinant;
+        }
+    }
+    return output_matrix;
 }
 
 double* matrix_multiply_3x1_1x3(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
