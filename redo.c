@@ -1,0 +1,88 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+#define DIMENSION 3
+
+double matrix_determinant(double input_matrix[][DIMENSION]){
+    return (double)1;
+}
+
+double* matrix_invert(double input_matrix[][DIMENSION]){
+    //TO DO INCOMPLETE
+    double* x;
+    return x;
+}
+
+double* matrix_multiply_3x1_1x3(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
+    double result[DIMENSION] = {0,0,0};
+    for (int i=0; i<DIMENSION; i++){
+        result[i] = matrix_1[i] * matrix_2[i];
+    }
+    return result;
+}
+
+double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
+    double sum = 0;
+    for (int i=0; i<DIMENSION; i++){
+        sum += matrix_1[i] * matrix_2[i];
+    }
+    return sum;
+}
+
+double* matrix_scalar_multiply_3x1(double scalar, double matrix_1[DIMENSION]){
+    double result[DIMENSION] = {0,0,0};
+    for (int i=0; i<DIMENSION; i++){
+        result[i] = matrix_1[i] * scalar;
+    }
+    return result;
+}
+
+double* matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
+    double result[DIMENSION] = {0,0,0};
+    for (int i=0; i<DIMENSION; i++){
+        result[i] = matrix_1[i] - matrix_2[i];
+    }
+    return result;
+}
+
+double* matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
+    double result[DIMENSION] = {0,0,0};
+    for (int i=0; i<DIMENSION; i++){
+        result[i] = matrix_1[i] + matrix_2[i];
+    }
+    return result;
+}
+
+double solve_K(double x, double y, double z){
+    double K = pow(x,(double)2) + pow(y,(double)2) + pow(z,(double)2);
+}
+
+double* solve_A(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4){
+    double A[DIMENSION][DIMENSION] = {{x2-x1, x3-x1, x4-x1},
+                                    {y2-y1, y3-y1, y4-y1},
+                                    {z2-z1, z3-z1, z4-z1}};
+    return A;
+}
+
+double* solve_b(double K1, double K2, double K3, double K4){
+    double b[DIMENSION] = {0.5*(K2 - K1), 0.5*(K3 - K1), 0.5*(K4 - K1)};
+    return b;
+}
+
+double create_ri_1(double ti, double t1){
+    return ti - t1;
+}
+
+double* solve_d(double r2_1, double r3_1, double r4_1){
+    double d[DIMENSION] = {r2_1, r3_1, r4_1};
+    return d;
+}
+
+double* solve_e(double r2_1, double r3_1, double r4_1){
+    double e[DIMENSION] = {pow(r2_1, (double)2), pow(r3_1, (double)2), pow(r4_1, (double)2)};
+    return e;
+}
+
+int main() {
+}
