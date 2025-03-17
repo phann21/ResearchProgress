@@ -29,11 +29,12 @@ double* matrix_invert(double input_matrix[][DIMENSION]){
 }
 
 //3x1 * 1x3 -> 3x3
-//INCORRECT
 double* matrix_multiply_3x1_1x3(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
-    double result[DIMENSION] = {0,0,0};
+    double result[DIMENSION][DIMENSION] = {{0,0,0},{0,0,0},{0,0,0}};
     for (int i=0; i<DIMENSION; i++){
-        result[i] = matrix_1[i] * matrix_2[i];
+        for (int j=0; j<DIMENSION; j++){
+            result[i][j] = matrix_1[i] * matrix_2[j];
+        }
     }
     return result;
 }
