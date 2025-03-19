@@ -39,6 +39,17 @@ double* matrix_multiply_3x1_1x3(double matrix_1[DIMENSION], double matrix_2[DIME
     return result;
 }
 
+//3x3 * 3x1 -> 3x1
+double* matrix_multiply_3x3_3x1(double matrix_1[DIMENSION][DIMENSION], double matrix_2[DIMENSION]){
+    double result[DIMENSION] = {0,0,0};
+    for (int i=0; i<DIMENSION; i++){
+        for (int j=0; j<DIMENSION; j++){
+            result[i] += matrix_1[i][j] * matrix_2[j];
+        }
+    }
+    return result;
+}
+
 //1x3 * 3x1 -> 1x1
 double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
     double sum = 0;
@@ -75,6 +86,7 @@ double* matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
     return result;
 }
 
+//1x1
 double solve_K(double x, double y, double z){
     double K = pow(x,(double)2) + pow(y,(double)2) + pow(z,(double)2);
 }
@@ -89,7 +101,7 @@ double* solve_A(double x1, double x2, double x3, double x4, double y1, double y2
 
 //3x1
 double* solve_b(double K1, double K2, double K3, double K4){
-    double b[DIMENSION] = {0.5*(K2 - K1), 0.5*(K3 - K1), 0.5*(K4 - K1)};
+    double b[DIMENSION] = {(K2 - K1), (K3 - K1), (K4 - K1)};
     return b;
 }
 
@@ -110,7 +122,61 @@ double* solve_e(double r2_1, double r3_1, double r4_1){
 }
 
 // ar1^2 + br1 + c = 0
- 
-int main() {
+
+double* solve_w(double* A, double* b, double* e){
+    double* inverted_A = matrix_invert(A);
+    double* diff_b_e = matrix_subtraction(b,e);
+    double* half_diff_b_e = matrix_scalar_multiply_3x1(0.5, diff_b_e);
+    double* result = matrix_multiply_3x3_3x1(inverted_A, half_diff_b_e);
+    return result;
+}
+
+double* solve_f(double* A, double* d){
+    double* inverted_A = matrix_invert(A);
+    double* result = matrix_multiply_3x3_3x1(inverted_A, d);
+    return result;
+}
+
+double solve_alpha(double* f){
+    double result = matrix_multiply_1x3_3x1(f, f);
+    return result - (double)1;
+}
+
+double solve_beta(double* f, double* w){
+    double result = matrix_multiply_1x3_3x1(f, w);
+    return (double)-2 * result;
+}
+
+double solve_sigma(double* w){
+    double result = matrix_multiply_1x3_3x1(w, w);
+    return result;
+}
+
+//quadratic formula
+double solve_r1(double alpha, double beta, double sigma){
+    double result_1 = (-1 * beta + pow(pow(beta,2) - 4 * alpha * sigma, 0.5)) / (2 * alpha);
+    double result_2 = (-1 * beta - pow(pow(beta,2) - 4 * alpha * sigma, 0.5)) / (2 * alpha);
+
+    if (result_1 < 0){
+        return result_2;
+    }
+    else{
+        return result_1;
+    }
+}
+
+// -> 3x1
+double* solve_points(double* A, double* b, double* d, double* e, double r1){
+    double* invert_A = matrix_invert(A);
+    double* r1_d = matrix_scalar_multiply_3x1(r1, d);
+    double* diff_b_e = matrix_subtraction(e,b);
+    double* half_b_e = matrix_scalar_multiply_3x1(0.5, diff_b_e);
+    double* add_b_d_e = matrix_addition(half_b_e, r1_d);
+    double* mult_a_b_d_e = matrix_multiply_3x3_3x1(invert_A, add_b_d_e);
+    double* result = matrix_scalar_multiply_3x1(-1, mult_a_b_d_e);
+    return result;
+}
+
+int main(){
     
 }
