@@ -87,12 +87,12 @@ double* matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
 }
 
 //1x1
-double solve_K(double x, double y, double z){
+double create_K(double x, double y, double z){
     double K = pow(x,(double)2) + pow(y,(double)2) + pow(z,(double)2);
 }
 
 //3x3
-double* solve_A(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4){
+double* create_A(double x1, double x2, double x3, double x4, double y1, double y2, double y3, double y4, double z1, double z2, double z3, double z4){
     double A[DIMENSION][DIMENSION] = {{x2-x1, x3-x1, x4-x1},
                                     {y2-y1, y3-y1, y4-y1},
                                     {z2-z1, z3-z1, z4-z1}};
@@ -100,7 +100,7 @@ double* solve_A(double x1, double x2, double x3, double x4, double y1, double y2
 }
 
 //3x1
-double* solve_b(double K1, double K2, double K3, double K4){
+double* create_b(double K1, double K2, double K3, double K4){
     double b[DIMENSION] = {(K2 - K1), (K3 - K1), (K4 - K1)};
     return b;
 }
@@ -110,19 +110,18 @@ double create_ri_1(double ti, double t1){
 }
 
 //3x1
-double* solve_d(double r2_1, double r3_1, double r4_1){
+double* create_d(double r2_1, double r3_1, double r4_1){
     double d[DIMENSION] = {r2_1, r3_1, r4_1};
     return d;
 }
 
 //3x1
-double* solve_e(double r2_1, double r3_1, double r4_1){
+double* create_e(double r2_1, double r3_1, double r4_1){
     double e[DIMENSION] = {pow(r2_1, (double)2), pow(r3_1, (double)2), pow(r4_1, (double)2)};
     return e;
 }
 
 // ar1^2 + br1 + c = 0
-
 double* solve_w(double* A, double* b, double* e){
     double* inverted_A = matrix_invert(A);
     double* diff_b_e = matrix_subtraction(b,e);
@@ -178,5 +177,49 @@ double* solve_points(double* A, double* b, double* d, double* e, double r1){
 }
 
 int main(){
-    
+    //inputs
+    double t1 = 0;
+    double t2 = 0;
+    double t3 = 0;
+    double t4 = 0;
+
+    double x1 = 0;
+    double x2 = 0;
+    double x3 = 0;
+    double x4 = 0;
+
+    double y1 = 0;
+    double y2 = 0;
+    double y3 = 0;
+    double y4 = 0;
+
+    double z1 = 0;
+    double z2 = 0;
+    double z3 = 0;
+    double z4 = 0;
+
+    double r2_1 = create_ri_1(t2, t1);
+    double r3_1 = create_ri_1(t3, t1);
+    double r4_1 = create_ri_1(t4, t1);
+
+    double K1 = create_K(x1, y1, z1);
+    double K2 = create_K(x2, y2, z2);
+    double K3 = create_K(x3, y3, z3);
+    double K4 = create_K(x4, y4, z4);
+
+    double* A = create_A(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4);
+    double* b = create_b(K1, K2, K3, K4);
+    double* d = create_d(r2_1, r3_1, r4_1);
+    double* e = create_e(r2_1, r3_1, r4_1);
+
+    double* w = solve_w(A, b, e);
+    double* f = solve_f(A, d);
+
+    double alpha = solve_alpha(f);
+    double beta = solve_beta(f, w);
+    double sigma = solve_sigma(w);
+
+    double r1 = solve_r1(alpha, beta, sigma);
+
+    double* result = solve_points(A, b, d, e, r1);
 }
