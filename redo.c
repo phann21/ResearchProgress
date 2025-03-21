@@ -3,6 +3,7 @@
 #include <math.h>
 
 #define DIMENSION 3
+#define C_speed 1480
 
 //3x3 -> 1x1
 double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
@@ -129,7 +130,7 @@ void create_b(double K1, double K2, double K3, double K4, double b[DIMENSION]){
 }
 
 double create_ri_1(double ti, double t1){
-    return ti - t1;
+    return C_speed*(ti - t1);
 }
 
 //3x1
@@ -210,24 +211,25 @@ void solve_points(double A[][DIMENSION], double b[DIMENSION], double d[DIMENSION
 
 int main(){
     //inputs
-    double t1 = 0;
-    double t2 = 0;
-    double t3 = 0;
-    double t4 = 0;
+    double t1 = .000014854827819041188;
+    double t2 = .000019098293376788757;
+    double t3 = .000019098293376788757;
+    double t4 = .00001909808997127745;
 
     double x1 = 0;
-    double x2 = 0;
-    double x3 = 0;
-    double x4 = 0;
-
     double y1 = 0;
-    double y2 = 0;
-    double y3 = 0;
-    double y4 = 0;
+    double z1 = 2;
 
-    double z1 = 0;
+    double x2 = -10;
+    double y2 = 17.321;
     double z2 = 0;
+
+    double x3 = -10;
+    double y3 = -17.321;
     double z3 = 0;
+
+    double x4 = 20;
+    double y4 = 0;
     double z4 = 0;
 
     double r2_1 = create_ri_1(t2, t1);
@@ -261,4 +263,8 @@ int main(){
 
     double result[DIMENSION];
     solve_points(A, b, d, e, r1, result);
+
+    for (int i=0; i<DIMENSION; i++){
+        printf("Value %lf\n", result[i]);
+    }
 }
