@@ -105,7 +105,7 @@ void matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION], dou
 
 //1x1
 double create_K(double x, double y, double z){
-    double K = pow(x,(double)2) + pow(y,(double)2) + pow(z,(double)2);
+    double K = pow(x, 2) + pow(y, 2) + pow(z, 2);
     return K;
 }
 
