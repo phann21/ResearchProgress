@@ -15,9 +15,9 @@ void matrix_transpose_3x3(double input_matrix[][DIMENSION], double output_matrix
 
 //3x3 -> 1x1
 double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
-    double first_line = input_matrix[0][0] * (input_matrix[1][1] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][1]); 
-    double second_line = input_matrix[0][1] * (input_matrix[1][0] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][0]);
-    double third_line = input_matrix[0][3] * (input_matrix[1][0] * input_matrix[2][1] - input_matrix[1][1] * input_matrix[2][0]);
+    double first_line = input_matrix[0][0] * ((input_matrix[1][1] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][1])); 
+    double second_line = input_matrix[0][1] * ((input_matrix[1][0] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][0]));
+    double third_line = input_matrix[0][2] * ((input_matrix[1][0] * input_matrix[2][1]) - (input_matrix[1][1] * input_matrix[2][0]));
 
     return first_line - second_line + third_line;
 }
@@ -41,14 +41,14 @@ void matrix_invert(double input_matrix[][DIMENSION], double output_matrix[][DIME
             adjoint_matrix[i][j] = adjoint_matrix[i][j] / determinant;
         }
     }
-    //printf("determinant %lf\n", determinant);
+    printf("determinant %lf\n", determinant);
     matrix_transpose_3x3(adjoint_matrix, output_matrix);
-    // for (int k=0; k<DIMENSION; k++){
-    //     for (int l=0; l<DIMENSION; l++){
-    //         printf("%lf ", output_matrix[k][l]);
-    //     }
-    //     printf("\n");
-    // }
+    for (int k=0; k<DIMENSION; k++){
+        for (int l=0; l<DIMENSION; l++){
+            printf("Inverted A %lf ", output_matrix[k][l]);
+        }
+        printf("\n");
+    }
 }
 
 //3x3 * 3x1 -> 3x1
@@ -129,6 +129,9 @@ void create_b(double r2_1, double r3_1, double r4_1, double b[DIMENSION]){
     b[0] = r2_1;
     b[1] = r3_1;
     b[2] = r4_1;
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("B %lf\n", b[k]);
+    // }
 }
 
 //3x1
@@ -136,6 +139,9 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
     d[0] = pow(r2_1, 2) - K2 + K1;
     d[1] = pow(r3_1, 2) - K3 + K1;
     d[2] = pow(r3_1, 2) - K4 + K1;
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("D %lf\n", d[k]);
+    // }
 }
 
 // -(A)^-1 * b
@@ -219,11 +225,11 @@ int main(){
     double y2 = 10;
     double z2 = -10;
 
-    double x3 = -8.660254;
+    double x3 = -8.66;
     double y3 = -5;
     double z3 = -10;
 
-    double x4 = 8.660254;
+    double x4 = 8.66;
     double y4 = -5;
     double z4 = -10;
     //User inputs END//
@@ -257,7 +263,7 @@ int main(){
     double result[DIMENSION];
     solve_points(A, b, d, r1, result);
 
-    for (int i=0; i<DIMENSION; i++){
-        printf("Value %lf\n", result[i]);
-    }
+    // for (int i=0; i<DIMENSION; i++){
+    //     printf("Value %lf\n", result[i]);
+    // }
 }
