@@ -41,18 +41,21 @@ void matrix_invert(double input_matrix[][DIMENSION], double output_matrix[][DIME
             adjoint_matrix[i][j] = adjoint_matrix[i][j] / determinant;
         }
     }
-    printf("determinant %lf\n", determinant);
+    // printf("determinant %lf\n", determinant);
     matrix_transpose_3x3(adjoint_matrix, output_matrix);
-    for (int k=0; k<DIMENSION; k++){
-        for (int l=0; l<DIMENSION; l++){
-            printf("Inverted A %lf ", output_matrix[k][l]);
-        }
-        printf("\n");
-    }
+    // for (int k=0; k<DIMENSION; k++){
+    //     for (int l=0; l<DIMENSION; l++){
+    //         printf("Inverted A %lf ", output_matrix[k][l]);
+    //     }
+    //     printf("\n");
+    // }
 }
 
 //3x3 * 3x1 -> 3x1
 void matrix_multiply_3x3_3x1(double matrix_1[DIMENSION][DIMENSION], double matrix_2[DIMENSION], double result[DIMENSION]){
+    result[0] = 0;
+    result[1] = 0;
+    result[2] = 0;
     for (int i=0; i<DIMENSION; i++){
         for (int j=0; j<DIMENSION; j++){
             result[i] += matrix_1[i][j] * matrix_2[j];
@@ -71,6 +74,9 @@ double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMEN
 
 //3x1 * 1x1 -> 3x1
 void matrix_scalar_multiply_3x1(double scalar, double matrix_1[DIMENSION], double result[DIMENSION]){
+    result[0] = 0;
+    result[1] = 0;
+    result[2] = 0;
     for (int i=0; i<DIMENSION; i++){
         result[i] = matrix_1[i] * scalar;
     }
@@ -85,6 +91,9 @@ void matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION], 
 
 //3x1 + 3x1 -> 3x1
 void matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION], double result[DIMENSION]){
+    result[0] = 0;
+    result[1] = 0;
+    result[2] = 0;
     for (int i=0; i<DIMENSION; i++){
         result[i] = matrix_1[i] + matrix_2[i];
     }
@@ -148,9 +157,25 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
 void solve_w(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
     double inverted_A[DIMENSION][DIMENSION];
     matrix_invert(A, inverted_A);
+    // for (int k=0; k<DIMENSION; k++){
+    //     for (int l=0; l<DIMENSION; l++){
+    //         printf("inverted_A %lf ", inverted_A[k][l]);
+    //     }
+    //     printf("\n");
+    // }
+
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("b %lf\n", b[k]);
+    // }
     double A_invert_b[DIMENSION];
     matrix_multiply_3x3_3x1(inverted_A, b, A_invert_b);
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("A_invert_b %lf\n", A_invert_b[k]);
+    // }
     matrix_scalar_multiply_3x1(-1, A_invert_b, result);
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("w %lf\n", result[k]);
+    // }
 }
 
 void solve_f(double A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
@@ -159,6 +184,9 @@ void solve_f(double A[][DIMENSION], double d[DIMENSION], double result[DIMENSION
     double A_invert_d[DIMENSION];
     matrix_multiply_3x3_3x1(inverted_A, d, A_invert_d);
     matrix_scalar_multiply_3x1(0.5, A_invert_d, result);
+    // for (int k=0; k<DIMENSION; k++){
+    //     printf("f %lf\n", result[k]);
+    // }
 }
 
 double solve_alpha(double* w){
@@ -181,13 +209,13 @@ double solve_r1(double alpha, double beta, double gamma){
     double result_1 = (-1 * beta + pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
     double result_2 = (-1 * beta - pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
     if (result_1 < 0){
-        printf("result 2 chosen r1_2: %lf\n", result_2);
-        printf("result 2 chosen r1_1: %lf\n", result_1);
+        // printf("result 2 chosen r1_2: %lf\n", result_2);
+        // printf("result 2 chosen r1_1: %lf\n", result_1);
         return result_2;
     }
     else{
-        printf("result 1 chosen r1_1: %lf\n", result_1);
-        printf("result 1 chosen r1_2: %lf\n", result_2);
+        // printf("result 1 chosen r1_1: %lf\n", result_1);
+        // printf("result 1 chosen r1_2: %lf\n", result_2);
         return result_1;
     }
 }
@@ -263,7 +291,7 @@ int main(){
     double result[DIMENSION];
     solve_points(A, b, d, r1, result);
 
-    // for (int i=0; i<DIMENSION; i++){
-    //     printf("Value %lf\n", result[i]);
-    // }
+    for (int i=0; i<DIMENSION; i++){
+        printf("Value %lf\n", result[i]);
+    }
 }
