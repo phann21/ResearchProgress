@@ -74,9 +74,6 @@ double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMEN
 
 //3x1 * 1x1 -> 3x1
 void matrix_scalar_multiply_3x1(double scalar, double matrix_1[DIMENSION], double result[DIMENSION]){
-    result[0] = 0;
-    result[1] = 0;
-    result[2] = 0;
     for (int i=0; i<DIMENSION; i++){
         result[i] = matrix_1[i] * scalar;
     }
@@ -89,16 +86,7 @@ void matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION], 
     }
 }
 
-//3x1 + 3x1 -> 3x1
-void matrix_addition(double matrix_1[DIMENSION], double matrix_2[DIMENSION], double result[DIMENSION]){
-    result[0] = 0;
-    result[1] = 0;
-    result[2] = 0;
-    for (int i=0; i<DIMENSION; i++){
-        result[i] = matrix_1[i] + matrix_2[i];
-    }
-}
-
+//1x1
 double create_ri_1(double ti, double t1){
     return C_speed*(ti - t1);
 }
