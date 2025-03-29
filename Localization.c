@@ -5,14 +5,6 @@
 #define DIMENSION 3
 #define C_speed 1481*1000 //speed of sound in mm/s
 
-void matrix_transpose_3x3(double input_matrix[][DIMENSION], double output_matrix[][DIMENSION]){
-    for (int i=0; i<DIMENSION; i++){
-        for (int j=0; j<DIMENSION; j++){
-            output_matrix[i][j] = input_matrix[j][i];
-        }
-    }
-}
-
 //3x3 -> 1x1
 double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
     double first_line = input_matrix[0][0] * ((input_matrix[1][1] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][1])); 
@@ -20,6 +12,14 @@ double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
     double third_line = input_matrix[0][2] * ((input_matrix[1][0] * input_matrix[2][1]) - (input_matrix[1][1] * input_matrix[2][0]));
 
     return first_line - second_line + third_line;
+}
+
+void matrix_transpose_3x3(double input_matrix[][DIMENSION], double output_matrix[][DIMENSION]){
+    for (int i=0; i<DIMENSION; i++){
+        for (int j=0; j<DIMENSION; j++){
+            output_matrix[i][j] = input_matrix[j][i];
+        }
+    }
 }
 
 //3x3 -> 3x3
@@ -142,7 +142,7 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
 }
 
 // -(A)^-1 * b
-void solve_w(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
+void solve_g(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
     double inverted_A[DIMENSION][DIMENSION];
     matrix_invert(A, inverted_A);
     // for (int k=0; k<DIMENSION; k++){
@@ -162,7 +162,7 @@ void solve_w(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION
     // }
     matrix_scalar_multiply_3x1(-1, A_invert_b, result);
     // for (int k=0; k<DIMENSION; k++){
-    //     printf("w %lf\n", result[k]);
+    //     printf("f %lf\n", result[k]);
     // }
 }
 
@@ -173,22 +173,22 @@ void solve_f(double A[][DIMENSION], double d[DIMENSION], double result[DIMENSION
     matrix_multiply_3x3_3x1(inverted_A, d, A_invert_d);
     matrix_scalar_multiply_3x1(0.5, A_invert_d, result);
     // for (int k=0; k<DIMENSION; k++){
-    //     printf("f %lf\n", result[k]);
+    //     printf("g %lf\n", result[k]);
     // }
 }
 
-double solve_alpha(double* w){
-    double result = matrix_multiply_1x3_3x1(w, w);
+double solve_alpha(double* f){
+    double result = matrix_multiply_1x3_3x1(f, f);
     return result - 1;
 }
 
-double solve_beta(double* w, double* f){
-    double result = matrix_multiply_1x3_3x1(f, w);
+double solve_beta(double* f, double* g){
+    double result = matrix_multiply_1x3_3x1(g, f);
     return -2 * result;
 }
 
-double solve_gamma(double* f){
-    double result = matrix_multiply_1x3_3x1(f, f);
+double solve_gamma(double* g){
+    double result = matrix_multiply_1x3_3x1(g, g);
     return result;
 }
 
@@ -197,13 +197,13 @@ double solve_r1(double alpha, double beta, double gamma){
     double result_1 = (-1 * beta + pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
     double result_2 = (-1 * beta - pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
     if (result_1 < 0){
-        // printf("result 2 chosen r1_2: %lf\n", result_2);
-        // printf("result 2 chosen r1_1: %lf\n", result_1);
+        printf("result 2 chosen r1_2: %lf\n", result_2);
+        printf("result 2 chosen r1_1: %lf\n", result_1);
         return result_2;
     }
     else{
-        // printf("result 1 chosen r1_1: %lf\n", result_1);
-        // printf("result 1 chosen r1_2: %lf\n", result_2);
+        printf("result 1 chosen r1_1: %lf\n", result_1);
+        printf("result 1 chosen r1_2: %lf\n", result_2);
         return result_1;
     }
 }
@@ -229,25 +229,25 @@ int main(){
     //User inputs BEGIN//
     //inputs seconds
     double t1 = 1.350438892640108e-05;
-    double t2 = 9.548939945566158e-06;
-    double t3 = 9.548939945566158e-06;
-    double t4 = 9.548939945566158e-06;
+    double t2 = 1.816851097513353e-05;
+    double t3 = 1.816851097513353e-05;
+    double t4 = 1.816829716012655e-05;
 
     double x1 = 0;
     double y1 = 0;
     double z1 = 0;
 
-    double x2 = 0;
-    double y2 = 10;
-    double z2 = -10;
+    double x2 = -10;
+    double y2 = 17.321;
+    double z2 = -2;
 
-    double x3 = -8.66;
-    double y3 = -5;
-    double z3 = -10;
+    double x3 = -10;
+    double y3 = -17.321;
+    double z3 = -2;
 
-    double x4 = 8.66;
-    double y4 = -5;
-    double z4 = -10;
+    double x4 = 20;
+    double y4 = 0;
+    double z4 = -2;
     //User inputs END//
 
     double r2_1 = create_ri_1(t2, t1);
@@ -265,14 +265,14 @@ int main(){
     double d[DIMENSION];
     create_d(r2_1, r3_1, r4_1, K1, K2, K3, K4, d);
 
-    double w[DIMENSION];
-    solve_w(A, b, w);
     double f[DIMENSION];
-    solve_f(A, d, f);
+    solve_g(A, b, f);
+    double g[DIMENSION];
+    solve_f(A, d, g);
 
-    double alpha = solve_alpha(w);
-    double beta = solve_beta(w, f);
-    double gamma = solve_gamma(f);
+    double alpha = solve_alpha(f);
+    double beta = solve_beta(f, g);
+    double gamma = solve_gamma(g);
 
     double r1 = solve_r1(alpha, beta, gamma);
 
