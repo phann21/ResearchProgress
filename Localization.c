@@ -5,6 +5,8 @@
 #define DIMENSION 3
 #define C_speed 1481*1000 //speed of sound in mm/s
 
+//BEGIN MATRIX METHODS
+
 // 3x3 -> 1x1
 double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
     double first_line = input_matrix[0][0] * ((input_matrix[1][1] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][1])); 
@@ -86,6 +88,8 @@ void matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION], 
         result[i] = matrix_1[i] - matrix_2[i];
     }
 }
+
+// END MATRIX METHODS
 
 // 1x1 ri_1 = C_speed(t_i - t1)
 double create_ri_1(double t_i, double t1){
