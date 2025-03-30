@@ -1,11 +1,19 @@
-#include <stdlib.h>
+/* ************************************* */
+// *****BEGIN INCLUDES AND DEFINES***** //
+/* *********************************** */
+
 #include <stdio.h>
 #include <math.h>
 
 #define DIMENSION 3
 #define C_speed 1481*1000 //speed of sound in mm/s
+/* *********************************** */
+// *****END INCLUDES AND DEFINES***** //
+/* ********************************* */
 
-//BEGIN MATRIX METHODS
+/* ******************************* */
+// *****BEGIN MATRIX METHODS***** //
+/* ***************************** */
 
 // 3x3 -> 1x1
 double matrix_determinant_3x3(double (*input_matrix)[DIMENSION]){
@@ -88,10 +96,13 @@ void matrix_subtraction(double* matrix_1, double* matrix_2, double* result){
         result[i] = matrix_1[i] - matrix_2[i];
     }
 }
+/* ***************************** */
+// *****END MATRIX METHODS***** //
+/* *************************** */
 
-// END MATRIX METHODS
-
-// BEGIN INITIALIZING VARIABLES
+/* *************************************** */
+// *****BEGIN INITIALIZING VARIABLES***** //
+/* ************************************* */
 
 // 1x1 ri_1 = C_speed(t_i - t1)
 double create_ri_1(double t_i, double t1){
@@ -148,9 +159,13 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
     // }
 }
 
-// END INITIALIZING VARIABLES
+/* ************************************* */
+// *****END INITIALIZING VARIABLES***** //
+/* *********************************** */
 
-// BEGIN INTERMEDIATE VARIABLES
+/* *************************************** */
+// *****BEGIN INTERMEDIATE VARIABLES***** //
+/* ************************************* */
 
 // f = -(A^-1) * b
 void solve_f(double (*invert_A)[DIMENSION], double* b, double* result){
@@ -193,7 +208,7 @@ double solve_alpha(double* f){
 
 // beta = -2 * gTf
 double solve_beta(double* f, double* g){
-    double result = matrix_multiply_1x3_3x1(g, f);
+    double result = matrix_multiply_1x3_3x1(f, g);
     return -2 * result;
 }
 
@@ -203,7 +218,13 @@ double solve_gamma(double* g){
     return result;
 }
 
-// END INTERMEDIATE VARIABLES
+/* ************************************* */
+// *****END INTERMEDIATE VARIABLES***** // 
+/* *********************************** */
+
+/* ************************ */
+// *****BEGIN SOLVERS***** //
+/* ********************** */
 
 // quadratic formula -beta +/- sqrt(b)
 double solve_r1(double alpha, double beta, double gamma){
@@ -236,9 +257,13 @@ void solve_points(double (*invert_A)[DIMENSION], double* b, double* d, double r1
     matrix_subtraction(negate_A_invert_b_r1, half_A_invert_d, result);
 }
 
+/* ********************** */
+// *****END SOLVERS***** //
+/* ******************** */
+
 int main(){
-    //User inputs BEGIN//
-    //inputs seconds
+    /******BEGIN USER INPUTS******/
+    // inputs in seconds
     double t1 = 1.350438892640108e-05;
     double t2 = 1.816851097513353e-05;
     double t3 = 1.816851097513353e-05;
@@ -259,7 +284,7 @@ int main(){
     double x4 = 20;
     double y4 = 0;
     double z4 = -2;
-    //User inputs END//
+    // *****END USER INPUTS****** //
 
     double r2_1 = create_ri_1(t2, t1);
     double r3_1 = create_ri_1(t3, t1);
