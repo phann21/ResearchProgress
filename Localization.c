@@ -5,7 +5,7 @@
 #define DIMENSION 3
 #define C_speed 1481*1000 //speed of sound in mm/s
 
-//3x3 -> 1x1
+// 3x3 -> 1x1
 double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
     double first_line = input_matrix[0][0] * ((input_matrix[1][1] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][1])); 
     double second_line = input_matrix[0][1] * ((input_matrix[1][0] * input_matrix[2][2]) - (input_matrix[1][2] * input_matrix[2][0]));
@@ -14,6 +14,7 @@ double matrix_determinant_3x3(double input_matrix[][DIMENSION]){
     return first_line - second_line + third_line;
 }
 
+// 3x3 -> 3x3
 void matrix_transpose_3x3(double input_matrix[][DIMENSION], double output_matrix[][DIMENSION]){
     for (int i=0; i<DIMENSION; i++){
         for (int j=0; j<DIMENSION; j++){
@@ -22,7 +23,7 @@ void matrix_transpose_3x3(double input_matrix[][DIMENSION], double output_matrix
     }
 }
 
-//3x3 -> 3x3
+// 3x3 -> 3x3
 void matrix_invert(double input_matrix[][DIMENSION], double output_matrix[][DIMENSION]){
     double adjoint_matrix[DIMENSION][DIMENSION];
     adjoint_matrix[0][0] = input_matrix[1][1] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][1];
@@ -51,7 +52,7 @@ void matrix_invert(double input_matrix[][DIMENSION], double output_matrix[][DIME
     // }
 }
 
-//3x3 * 3x1 -> 3x1
+// 3x3 * 3x1 -> 3x1
 void matrix_multiply_3x3_3x1(double matrix_1[DIMENSION][DIMENSION], double matrix_2[DIMENSION], double result[DIMENSION]){
     result[0] = 0;
     result[1] = 0;
@@ -63,7 +64,7 @@ void matrix_multiply_3x3_3x1(double matrix_1[DIMENSION][DIMENSION], double matri
     }
 }
 
-//1x3 * 3x1 -> 1x1
+// 1x3 * 3x1 -> 1x1
 double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMENSION]){
     double sum = 0;
     for (int i=0; i<DIMENSION; i++){
@@ -72,32 +73,32 @@ double matrix_multiply_1x3_3x1(double matrix_1[DIMENSION], double matrix_2[DIMEN
     return sum;
 }
 
-//3x1 * 1x1 -> 3x1
+// 3x1 * 1x1 -> 3x1
 void matrix_scalar_multiply_3x1(double scalar, double matrix_1[DIMENSION], double result[DIMENSION]){
     for (int i=0; i<DIMENSION; i++){
         result[i] = matrix_1[i] * scalar;
     }
 }
 
-//3x1 - 3x1 -> 3x1
+// 3x1 - 3x1 -> 3x1
 void matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION], double result[DIMENSION]){
     for (int i=0; i<DIMENSION; i++){
         result[i] = matrix_1[i] - matrix_2[i];
     }
 }
 
-//1x1
-double create_ri_1(double ti, double t1){
-    return C_speed*(ti - t1);
+// 1x1 ri_1 = C_speed(t_i - t1)
+double create_ri_1(double t_i, double t1){
+    return C_speed*(t_i - t1);
 }
 
-//1x1
+// 1x1 K_i = x_i^2 + y_i^2 + z_i^2
 double create_K(double x, double y, double z){
     double K = pow(x, 2) + pow(y, 2) + pow(z, 2);
     return K;
 }
 
-//3x3
+// 3x3
 // [[x2-x1; y2-y1; z2-z1;],
 // [x3-x1; y3-y1; z3-z1;],
 // [x4-x1; y4-y1; z4-z1;]]
@@ -121,7 +122,7 @@ void create_A(double x1, double x2, double x3, double x4, double y1, double y2, 
     // }
 }
 
-//3x1
+// 3x1
 void create_b(double r2_1, double r3_1, double r4_1, double b[DIMENSION]){
     b[0] = r2_1;
     b[1] = r3_1;
@@ -131,7 +132,7 @@ void create_b(double r2_1, double r3_1, double r4_1, double b[DIMENSION]){
     // }
 }
 
-//3x1
+// 3x1
 void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, double K3, double K4, double d[DIMENSION]){
     d[0] = pow(r2_1, 2) - K2 + K1;
     d[1] = pow(r3_1, 2) - K3 + K1;
@@ -141,7 +142,7 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
     // }
 }
 
-// -(A)^-1 * b
+// g = -(A^-1) * b
 void solve_g(double invert_A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
     // for (int k=0; k<DIMENSION; k++){
     //     for (int l=0; l<DIMENSION; l++){
@@ -164,6 +165,7 @@ void solve_g(double invert_A[][DIMENSION], double b[DIMENSION], double result[DI
     // }
 }
 
+// f = 0.5(-(A^-1) * d)
 void solve_f(double invert_A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
     double A_invert_d[DIMENSION];
     matrix_multiply_3x3_3x1(invert_A, d, A_invert_d);
@@ -173,25 +175,28 @@ void solve_f(double invert_A[][DIMENSION], double d[DIMENSION], double result[DI
     // }
 }
 
+// alpha = fTf - 1
 double solve_alpha(double* f){
     double result = matrix_multiply_1x3_3x1(f, f);
     return result - 1;
 }
 
+// beta = -2 * gTf
 double solve_beta(double* f, double* g){
     double result = matrix_multiply_1x3_3x1(g, f);
     return -2 * result;
 }
 
+// gamma = gTg
 double solve_gamma(double* g){
     double result = matrix_multiply_1x3_3x1(g, g);
     return result;
 }
 
-//quadratic formula
+// quadratic formula -beta +/- sqrt(b)
 double solve_r1(double alpha, double beta, double gamma){
-    double result_1 = (-1 * beta + pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
-    double result_2 = (-1 * beta - pow(pow(beta,2) - 4 * alpha * gamma, 0.5)) / (2 * alpha);
+    double result_1 = (-1 * beta + sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
+    double result_2 = (-1 * beta - sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
     if (result_1 < 0){
         printf("result 2 chosen r1_2: %lf\n", result_2);
         printf("result 2 chosen r1_1: %lf\n", result_1);
