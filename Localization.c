@@ -91,13 +91,15 @@ void matrix_subtraction(double matrix_1[DIMENSION], double matrix_2[DIMENSION], 
 
 // END MATRIX METHODS
 
+// BEGIN INITIALIZING VARIABLES
+
 // 1x1 ri_1 = C_speed(t_i - t1)
 double create_ri_1(double t_i, double t1){
     return C_speed*(t_i - t1);
 }
 
 // 1x1 K_i = x_i^2 + y_i^2 + z_i^2
-double create_K(double x, double y, double z){
+double create_Ki(double x, double y, double z){
     double K = pow(x, 2) + pow(y, 2) + pow(z, 2);
     return K;
 }
@@ -146,8 +148,12 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
     // }
 }
 
-// g = -(A^-1) * b
-void solve_g(double invert_A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
+// END INITIALIZING VARIABLES
+
+// BEGIN HELPER VARIABLES
+
+// f = -(A^-1) * b
+void solve_f(double invert_A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
     // for (int k=0; k<DIMENSION; k++){
     //     for (int l=0; l<DIMENSION; l++){
     //         printf("inverted_A %lf ", inverted_A[k][l]);
@@ -169,8 +175,8 @@ void solve_g(double invert_A[][DIMENSION], double b[DIMENSION], double result[DI
     // }
 }
 
-// f = 0.5(-(A^-1) * d)
-void solve_f(double invert_A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
+// g = 0.5(-(A^-1) * d)
+void solve_g(double invert_A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
     double A_invert_d[DIMENSION];
     matrix_multiply_3x3_3x1(invert_A, d, A_invert_d);
     matrix_scalar_multiply_3x1(0.5, A_invert_d, result);
@@ -196,6 +202,8 @@ double solve_gamma(double* g){
     double result = matrix_multiply_1x3_3x1(g, g);
     return result;
 }
+
+// END HELPER VARIABLES
 
 // quadratic formula -beta +/- sqrt(b)
 double solve_r1(double alpha, double beta, double gamma){
@@ -257,10 +265,10 @@ int main(){
     double r3_1 = create_ri_1(t3, t1);
     double r4_1 = create_ri_1(t4, t1);
 
-    double K1 = create_K(x1, y1, z1);
-    double K2 = create_K(x2, y2, z2);
-    double K3 = create_K(x3, y3, z3);
-    double K4 = create_K(x4, y4, z4);
+    double K1 = create_Ki(x1, y1, z1);
+    double K2 = create_Ki(x2, y2, z2);
+    double K3 = create_Ki(x3, y3, z3);
+    double K4 = create_Ki(x4, y4, z4);
     double A[DIMENSION][DIMENSION];
     create_A(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, A);
     double invert_A[DIMENSION][DIMENSION];
@@ -271,9 +279,9 @@ int main(){
     create_d(r2_1, r3_1, r4_1, K1, K2, K3, K4, d);
 
     double f[DIMENSION];
-    solve_g(invert_A, b, f);
+    solve_f(invert_A, b, f);
     double g[DIMENSION];
-    solve_f(invert_A, d, g);
+    solve_g(invert_A, d, g);
 
     double alpha = solve_alpha(f);
     double beta = solve_beta(f, g);
