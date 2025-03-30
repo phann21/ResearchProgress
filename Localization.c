@@ -142,9 +142,7 @@ void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, doubl
 }
 
 // -(A)^-1 * b
-void solve_g(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
-    double inverted_A[DIMENSION][DIMENSION];
-    matrix_invert(A, inverted_A);
+void solve_g(double invert_A[][DIMENSION], double b[DIMENSION], double result[DIMENSION]){
     // for (int k=0; k<DIMENSION; k++){
     //     for (int l=0; l<DIMENSION; l++){
     //         printf("inverted_A %lf ", inverted_A[k][l]);
@@ -156,7 +154,7 @@ void solve_g(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION
     //     printf("b %lf\n", b[k]);
     // }
     double A_invert_b[DIMENSION];
-    matrix_multiply_3x3_3x1(inverted_A, b, A_invert_b);
+    matrix_multiply_3x3_3x1(invert_A, b, A_invert_b);
     // for (int k=0; k<DIMENSION; k++){
     //     printf("A_invert_b %lf\n", A_invert_b[k]);
     // }
@@ -166,11 +164,9 @@ void solve_g(double A[][DIMENSION], double b[DIMENSION], double result[DIMENSION
     // }
 }
 
-void solve_f(double A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
-    double inverted_A[DIMENSION][DIMENSION];
-    matrix_invert(A, inverted_A);
+void solve_f(double invert_A[][DIMENSION], double d[DIMENSION], double result[DIMENSION]){
     double A_invert_d[DIMENSION];
-    matrix_multiply_3x3_3x1(inverted_A, d, A_invert_d);
+    matrix_multiply_3x3_3x1(invert_A, d, A_invert_d);
     matrix_scalar_multiply_3x1(0.5, A_invert_d, result);
     // for (int k=0; k<DIMENSION; k++){
     //     printf("g %lf\n", result[k]);
@@ -208,10 +204,8 @@ double solve_r1(double alpha, double beta, double gamma){
     }
 }
 
-// -> 3x1
-void solve_points(double A[][DIMENSION], double b[DIMENSION], double d[DIMENSION], double r1, double result[DIMENSION]){
-    double invert_A[DIMENSION][DIMENSION];
-    matrix_invert(A, invert_A);
+//returns -> 3x1
+void solve_points(double invert_A[][DIMENSION], double b[DIMENSION], double d[DIMENSION], double r1, double result[DIMENSION]){
     double r1_b[DIMENSION];
     matrix_scalar_multiply_3x1(r1, b, r1_b);
     double A_invert_b_r1[DIMENSION];
@@ -260,15 +254,17 @@ int main(){
     double K4 = create_K(x4, y4, z4);
     double A[DIMENSION][DIMENSION];
     create_A(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, A);
+    double invert_A[DIMENSION][DIMENSION];
+    matrix_invert(A, invert_A);
     double b[DIMENSION];
     create_b(r2_1, r3_1, r4_1, b);
     double d[DIMENSION];
     create_d(r2_1, r3_1, r4_1, K1, K2, K3, K4, d);
 
     double f[DIMENSION];
-    solve_g(A, b, f);
+    solve_g(invert_A, b, f);
     double g[DIMENSION];
-    solve_f(A, d, g);
+    solve_f(invert_A, d, g);
 
     double alpha = solve_alpha(f);
     double beta = solve_beta(f, g);
@@ -277,7 +273,7 @@ int main(){
     double r1 = solve_r1(alpha, beta, gamma);
 
     double result[DIMENSION];
-    solve_points(A, b, d, r1, result);
+    solve_points(invert_A, b, d, r1, result);
 
     for (int i=0; i<DIMENSION; i++){
         printf("Value %lf\n", result[i]);
