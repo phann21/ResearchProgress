@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 # Initial Transducer locations
 T1 = [0, 0, 0]
-T2 = [-10, 17.321, -2]
-T3 = [-10, -17.321, -2]
-T4 = [20, 0, -2]
+T2 = [-10, 17.321, -10]
+T3 = [-10, -17.321, -10]
+T4 = [20, 0, -10]
 
 ME = [0,0,-20]
 
