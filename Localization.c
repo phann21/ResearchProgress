@@ -196,7 +196,7 @@ void solve_f(double (*invert_A)[DIMENSION], double* b, double* result){
     // }
 }
 
-// g = 0.5(-(A^-1) * d)
+// g = 0.5((A^-1) * d)
 void solve_g(double (*invert_A)[DIMENSION], double* d, double* result){
     double A_invert_d[DIMENSION];
     matrix_multiply_3x3_3x1(invert_A, d, A_invert_d);
@@ -232,8 +232,12 @@ double solve_gamma(double* g){
 // *****BEGIN SOLVERS***************************************************************************** //
 /* ********************************************************************************************** */
 
-// quadratic formula -beta +/- sqrt(b)
+// quadratic formula -beta +/- sqrt(b^2 - 4 * alpha * gamma) / 2 * alpha
 double solve_r1(double alpha, double beta, double gamma){
+    double discriminant = pow(beta, 2) - 4 * alpha * gamma;
+    if (discriminant < 0){
+        return -1;
+    }
     double result_1 = (-1 * beta + sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
     double result_2 = (-1 * beta - sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
     if (result_1 > 0 && result_2 > 0){
@@ -360,10 +364,11 @@ int main(){
     double gamma = solve_gamma(g);
 
     double r1 = solve_r1(alpha, beta, gamma);
-
+    if (r1 < 0){
+        return 1;
+    }
     double result[DIMENSION];
     solve_points(invert_A, b, d, r1, result);
-    /* here, do your time-consuming job */
 
     clock_t end = clock();
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
