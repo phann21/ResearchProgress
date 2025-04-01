@@ -36,7 +36,7 @@ void matrix_transpose_3x3(double (*input_matrix)[DIMENSION], double (*output_mat
 }
 
 // 3x3 -> 3x3
-void matrix_invert(double (*input_matrix)[DIMENSION], double (*output_matrix)[DIMENSION]){
+int matrix_invert(double (*input_matrix)[DIMENSION], double (*output_matrix)[DIMENSION]){
     double adjoint_matrix[DIMENSION][DIMENSION];
     adjoint_matrix[0][0] = input_matrix[1][1] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][1];
     adjoint_matrix[0][1] = (-1) * (input_matrix[1][0] * input_matrix[2][2] - input_matrix[1][2] * input_matrix[2][0]);
@@ -49,6 +49,9 @@ void matrix_invert(double (*input_matrix)[DIMENSION], double (*output_matrix)[DI
     adjoint_matrix[2][2] = input_matrix[0][0] * input_matrix[1][1] - input_matrix[0][1] * input_matrix[1][0];
     
     double determinant = matrix_determinant_3x3(input_matrix);
+    if (determinant == 0){
+        return 1;
+    }
     for (int i = 0; i < DIMENSION; i++){
         for (int j = 0; j < DIMENSION; j++){
             adjoint_matrix[i][j] = adjoint_matrix[i][j] / determinant;
@@ -56,6 +59,7 @@ void matrix_invert(double (*input_matrix)[DIMENSION], double (*output_matrix)[DI
     }
     // printf("determinant %lf\n", determinant);
     matrix_transpose_3x3(adjoint_matrix, output_matrix);
+    return 0;
     // for (int k=0; k<DIMENSION; k++){
     //     for (int l=0; l<DIMENSION; l++){
     //         printf("Inverted A %lf ", output_matrix[k][l]);
@@ -155,7 +159,7 @@ void create_b(double r2_1, double r3_1, double r4_1, double* b){
 void create_d(double r2_1, double r3_1, double r4_1, double K1, double K2, double K3, double K4, double* d){
     d[0] = pow(r2_1, 2) - K2 + K1;
     d[1] = pow(r3_1, 2) - K3 + K1;
-    d[2] = pow(r3_1, 2) - K4 + K1;
+    d[2] = pow(r4_1, 2) - K4 + K1;
     // for (int k=0; k<DIMENSION; k++){
     //     printf("D %lf\n", d[k]);
     // }
@@ -232,11 +236,27 @@ double solve_gamma(double* g){
 double solve_r1(double alpha, double beta, double gamma){
     double result_1 = (-1 * beta + sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
     double result_2 = (-1 * beta - sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
+    if (result_1 > 0 && result_2 > 0){
+        if (result_1 > result_2){
+            printf("result_2 chosen r2: %lf\n", result_2);
+            printf("result_2 chosen r1: %lf\n", result_1);
+            return result_2;
+        }
+        else{
+            printf("result_1 chosen r1: %lf\n", result_1);
+            printf("result_1 chosen r2: %lf\n", result_2);
+            return result_1;
+        }
+    }
     if (result_1 < 0){
+        printf("result_2 chosen r2: %lf\n", result_2);
+        printf("result_2 chosen r1: %lf\n", result_1);
         return result_2;
     }
     else{
-        return result_2;
+        printf("result_1 chosen r1: %lf\n", result_1);
+        printf("result_1 chosen r2: %lf\n", result_2);
+        return result_1;
     }
 }
 
@@ -263,26 +283,52 @@ int main(){
     clock_t begin = clock();
     /******BEGIN USER INPUTS******/
     // inputs in seconds
-    double t1 = 1.350438892640108e-05;
-    double t2 = 1.816851097513353e-05;
-    double t3 = 1.816851097513353e-05;
-    double t4 = 1.816829716012655e-05;
+    // double t1 = 1.350438892640108e-05;
+    // double t2 = 9.549044985638725e-06;
+    // double t3 = 9.548939945566158e-06;
+    // double t4 = 9.548939945566158e-06;
+    // double t1 = 5.4855087134611484e-06;
+    // double t2 = 1.3037280047565443e-05;
+    // double t3 = 1.8108311020723282e-05;
+    // double t4 = 6.2617275459120215e-06;
+    double t1 = 1.1012495901620587e-05;
+    double t2 = 1.3037280047565443e-05;
+    double t3 = 1.8108311020723282e-05;
+    double t4 = 1.181151632986894e-05;
+    
 
+    
+
+    // double x1 = 0;
+    // double y1 = 0;
+    // double z1 = 0;
+
+    // double x2 = 0;
+    // double y2 = 10;
+    // double z2 = -10;
+
+    // double x3 = -8.66;
+    // double y3 = -5;
+    // double z3 = -10;
+
+    // double x4 = 8.66;
+    // double y4 = -5;
+    // double z4 = -10;
     double x1 = 0;
     double y1 = 0;
     double z1 = 0;
 
     double x2 = -10;
     double y2 = 17.321;
-    double z2 = -2;
+    double z2 = -10;
 
     double x3 = -10;
     double y3 = -17.321;
-    double z3 = -2;
+    double z3 = -10;
 
-    double x4 = 20;
+    double x4 = 10;
     double y4 = 0;
-    double z4 = -2;
+    double z4 = -10;
     // *****END USER INPUTS****** //
 
     double r2_1 = create_ri_1(t2, t1);
@@ -296,7 +342,9 @@ int main(){
     double A[DIMENSION][DIMENSION];
     create_A(x1, x2, x3, x4, y1, y2, y3, y4, z1, z2, z3, z4, A);
     double invert_A[DIMENSION][DIMENSION];
-    matrix_invert(A, invert_A);
+    if (matrix_invert(A, invert_A) == 1){
+        return 1;
+    }
     double b[DIMENSION];
     create_b(r2_1, r3_1, r4_1, b);
     double d[DIMENSION];
@@ -323,5 +371,5 @@ int main(){
     for (int i=0; i<DIMENSION; i++){
         printf("Value %lf\n", result[i]);
     }
-    //printf("Time spent: %lfs\n", time_spent);
+    printf("Time spent: %lfs\n", time_spent);
 }
