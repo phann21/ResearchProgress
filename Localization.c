@@ -59,13 +59,13 @@ int matrix_invert(double (*input_matrix)[DIMENSION], double (*output_matrix)[DIM
     }
     // printf("determinant %lf\n", determinant);
     matrix_transpose_3x3(adjoint_matrix, output_matrix);
-    return 0;
     // for (int k=0; k<DIMENSION; k++){
     //     for (int l=0; l<DIMENSION; l++){
     //         printf("Inverted A %lf ", output_matrix[k][l]);
     //     }
     //     printf("\n");
     // }
+    return 0;
 }
 
 // 3x3 * 3x1 -> 3x1
@@ -242,24 +242,24 @@ double solve_r1(double alpha, double beta, double gamma){
     double result_2 = (-1 * beta - sqrt(pow(beta, 2) - 4 * alpha * gamma)) / (2 * alpha);
     if (result_1 > 0 && result_2 > 0){
         if (result_1 > result_2){
-            printf("result_2 chosen r2: %lf\n", result_2);
-            printf("result_2 chosen r1: %lf\n", result_1);
+            // printf("result_2 chosen r2: %lf\n", result_2);
+            // printf("result_2 chosen r1: %lf\n", result_1);
             return result_2;
         }
         else{
-            printf("result_1 chosen r1: %lf\n", result_1);
-            printf("result_1 chosen r2: %lf\n", result_2);
+            // printf("result_1 chosen r1: %lf\n", result_1);
+            // printf("result_1 chosen r2: %lf\n", result_2);
             return result_1;
         }
     }
     if (result_1 < 0){
-        printf("result_2 chosen r2: %lf\n", result_2);
-        printf("result_2 chosen r1: %lf\n", result_1);
+        // printf("result_2 chosen r2: %lf\n", result_2);
+        // printf("result_2 chosen r1: %lf\n", result_1);
         return result_2;
     }
     else{
-        printf("result_1 chosen r1: %lf\n", result_1);
-        printf("result_1 chosen r2: %lf\n", result_2);
+        // printf("result_1 chosen r1: %lf\n", result_1);
+        // printf("result_1 chosen r2: %lf\n", result_2);
         return result_1;
     }
 }
@@ -295,7 +295,7 @@ int main(){
     // double t2 = 1.3037280047565443e-05;
     // double t3 = 1.8108311020723282e-05;
     // double t4 = 6.2617275459120215e-06;
-    double t1 = 1.1012495901620587e-05;
+    double t1 = 5.4855087134611484e-06;
     double t2 = 1.3037280047565443e-05;
     double t3 = 1.8108311020723282e-05;
     double t4 = 1.181151632986894e-05;
@@ -330,7 +330,7 @@ int main(){
     double y3 = -17.321;
     double z3 = -10;
 
-    double x4 = 10;
+    double x4 = 20;
     double y4 = 0;
     double z4 = -10;
     // *****END USER INPUTS****** //
